@@ -1,0 +1,6 @@
+# Makefile  
+  
+all: Chicken  
+  
+Chicken: Chicken.cpp  
+    g++ Chicken.cpp -o Chicken  
