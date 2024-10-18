@@ -1,0 +1,129 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{董来仪, 3230104635}
+\chead{数据结构与算法第四次作业}
+\rhead{Oct.16th, 2024}
+
+\section{测试程序的设计思路}
+我首先用初始化列表构造函数创建了一个链表lst1，并输出
+
+然后创建了一个负责存储整数的双向链表intList
+
+然后通过push\_back将数字1-9递增放入
+
+再通过push\_front将数字0放入begin位置
+
+之后测试了size和empty函数
+
+再测试了front和back函数
+
+分别使用前置自增和后置自增,以及end()将intList中的数字输出
+
+然后使用前置自减和后置自减,以及begin()将intList中的数字输出
+
+使用clear函数,通过size和empty函数来验证intList是否清空
+
+然后使用copy constructor定义新链表intListCopy,使用assignment operator定义新链表intListAssign,
+并将intListCopy和intListAssign的元素逐个输出
+
+然后使用insert在intList的begin插入3,并输出
+
+使用erase将begin位置的3删除,输出
+
+使用pop\_back将最后一个元素删除输出
+
+使用pop\_front将第一个元素删除,输出
+
+最后使用move函数将intList中的元素移动到lst2中,并输出
+
+\section{测试的结果}
+1 2 3 4 5 
+
+intList size: 10, empty: false
+
+intList front: 0, back: 9
+
+1 2 3 4 5 6 7 8 9 
+
+1 2 3 4 5 6 7 8 9 0 
+
+intList reverse: 9 8 7 6 5 4 3 2 1 0 
+
+9 8 7 6 5 4 3 2 1 
+
+intList size: 0, empty: true
+
+0 1 2 3 4 5 6 7 8 9 
+
+0 1 2 3 4 5 6 7 8 9 
+
+3 0 1 2 3 4 5 6 7 8 9 
+
+0 1 2 3 4 5 6 7 8 9 
+
+0 1 2 3 4 5 6 7 8 
+
+1 2 3 4 5 6 7 8 
+
+1 2 3 4 5 6 7 8 
+
+测试结果一切正常。
+
+我用 valgrind 进行测试，发现没有发生内存泄露。
+
+\section{(可选)bug报告}
+
+我发现了一个 bug,触发条件如下:
+
+\begin{enumerate}
+    \item 首先……
+    \item 然后……
+    \item 此时发现……
+\end{enumerate}
+
+据我分析，它出现的原因是：
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
