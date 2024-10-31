@@ -1,0 +1,139 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{董来仪, 3230104635}
+\chead{数据结构与算法第五次作业}
+\rhead{Oct.31th, 2024}
+
+\section{remove实现阐释}
+首先创建函数    detachMin
+
+如果当前节点t为空,返回nullptr
+
+如果当前节点t没有左子树,那么t就是最小节点,新建指针指向t的节点,t =t->right,并返回新建指针
+
+如果当前节点t有左子树,那么最小节点必定在左子树中,递归地在左子树中查找最小节点就行了
+
+然后创建函数        remove
+
+首先递归寻找x所在的节点,找到之后分情况讨论
+
+如果该节点没有子树,那么直接删除该节点
+
+如果该节点只有一个子树,那么直接t = t->right或者t = t->left即可
+
+如果左右子树都有,那么使用detachMin函数返回右子树的最小节点,让该节点的值等于最小节点的值
+
+\section{测试的结果}
+创建了一个如图所示的二叉搜索树
+                        19
+                     
+            10                      25
+
+        9       15               21       26
+
+                                    23
+先删除了19,输出了
+
+9
+
+10
+
+15
+
+21
+
+23
+
+25
+
+26
+
+此结果与预期一致,因为根节点是19,其左右子树均不为空,而右子树的最小节点是21,所以删除19后,根节点的值为21
+
+然后删除了9和10,9没有子树,删除9后10仅有右子树,所以输出为
+
+10
+
+15
+
+21
+
+23
+
+25
+
+26
+
+
+
+15
+
+21
+
+23
+
+25
+
+26
+
+再删除不存在的值100,树的结构没有变化,仍然为
+
+15
+
+21
+
+23
+
+25
+
+26
+
+测试结果一切正常。
+
+我用 valgrind 进行测试,发现没有发生内存泄露。
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
