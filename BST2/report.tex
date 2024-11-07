@@ -1,0 +1,102 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{董来仪, 3230104635}
+\chead{数据结构与算法第六次作业}
+\rhead{Nov.7th, 2024}
+
+\section{remove实现阐释}
+
+1.分析目的
+
+删除树中的某个节点,并保持树的平衡
+
+
+
+2.找到目标节点
+
+首先,递归地找到要删除的节点——如果目标节点小于当前节点,递归向左子树查找;如果目标节点大于当前节点,递归向右子树查找.
+
+
+
+3.删除目标节点
+
+   叶子节点(没有子节点):如果节点没有左右子树,直接删除该节点,并将其父节点的指针设为 'nullptr'.
+
+
+   只有一个子节点:如果节点只有一个子节点,则直接用这个子节点替代当前节点,删除该节点.
+
+
+   有两个子节点:找到右子树的最小节点,并用它来替代当前节点.
+
+
+   删除节点后更新高度:检查节点左右子树的高度,并将当前节点的高度更新为 '1 + max(左子树高度, 右子树高度)'.
+
+
+
+4.恢复平衡:
+
+    1.平衡因子:每个节点的平衡因子是左子树的高度减去右子树的高度.平衡因子的值应该在 '-1' 到 '1' 之间.
+
+    如果某个节点的平衡因子超出了这个范围,则说明树不平衡,需要进行旋转操作.
+
+
+
+    2.旋转操作:
+
+    
+    平衡因子为 '2',左子树比右子树高,且左子树的左子树比左子树的右子树高,通过右旋转恢复平衡.
+    
+    平衡因子为 '-2',右子树比左子树高,且右子树的右子树比右子树的左子树高,通过左旋转恢复平衡.
+
+    平衡因子为 '2' 且左子树的右子树比左子树的左子树高,需要先对不平衡的子树进行一次旋转,再对根节点进行一次旋转.
+    
+    平衡因子为 '-2' 且右子树的左子树比右子树的右子树高,需要先对不平衡的子树进行一次旋转,再对根节点进行一次旋转.
+
+
+
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
