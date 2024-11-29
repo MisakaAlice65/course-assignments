@@ -1,0 +1,189 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{董来仪, 3230104635}
+\chead{HeapSort}
+\rhead{Nov.29th, 2024}
+
+\section{测试程序的设计思路}
+分析目的:自定义一个堆排序算法,并与  `std::sort\_heap` 比较time
+
+一:选择算法
+
+使用堆排序算法
+
+二:设计函数
+
+ `heapify` 函数维护堆的结构, `heapSort` 函数完成排序
+
+三:测试用例
+
+随机序列、有序序列、逆序序列、部分重复序列
+
+四:time
+
+`std::chrono` 记录每种排序方式的time 
+
+\section{必要函数的功能与实现细节}
+在本项目中,堆排序的实现主要依赖两个函数:`heapify` 和 `heapSort`。
+
+\subsection{heapify 函数}
+作用:将一个子树调整为堆结构,确保父节点大于或等于其左右子节点。
+
+\begin{verbatim}
+template <typename T>
+void heapify(std::vector<T>& vec, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;   // 左子节点索引
+    int right = 2 * i + 2;  // 右子节点索引
+
+    // 如果左子节点比当前节点大
+    if (left < n && vec[left] > vec[largest]) {
+        largest = left;
+    }
+
+    // 如果右子节点比当前节点大
+    if (right < n && vec[right] > vec[largest]) {
+        largest = right;
+    }
+
+    // 如果父节点小于子节点,交换并递归调整
+    if (largest != i) {
+        std::swap(vec[i], vec[largest]);
+        heapify(vec, n, largest);
+    }
+}
+\end{verbatim}
+
+\subsection{heapSort 函数}
+作用:执行堆排序,首先,使用 `heapify` 函数构建最大堆,然后通过交换堆顶元素与最后一个元素来将最大元素放到已排序部分,接着继续调整剩余部分直到整个数组排序完成
+
+\begin{verbatim}
+template <typename T>
+void heapSort(std::vector<T>& vec) {
+    int n = vec.size();
+
+    // 建立最大堆
+    for (int i = n / 2 - 1; i >= 0; --i) {
+        heapify(vec, n, i);
+    }
+
+    // 逐个提取元素
+    for (int i = n - 1; i > 0; --i) {
+        std::swap(vec[0], vec[i]);  // 将堆顶元素与最后一个元素交换
+        heapify(vec, i, 0);         // 重新调整堆
+    }
+}
+\end{verbatim}
+
+\section{测试流程}
+\begin{enumerate}
+    \item 生成测试序列:
+    \begin{itemize}
+        \item 随机序列:使用 `std::uniform\_int\_distribution` 生成随机数并填充数组
+        \item 有序序列:直接生成从 0 到 999999 的递增序列
+        \item 逆序序列:生成从 999999 到 0 的递减序列
+        \item 部分重复序列:生成元素值在一定范围内重复的序列
+    \end{itemize}
+    
+    \item 分别排序并记录time    \begin{itemize}
+        \item 对每种测试序列,首先使用自定义堆排序进行排序
+        \item 然后使用 `std::sort\_heap` 对相同序列进行排序
+        \item 使用 `std::chrono` 来记录每次排序所消耗的时间
+    \end{itemize}
+    
+    \item check验证正确性:
+    \begin{itemize}
+        \item 在每次排序后,使用 `check` 函数验证排序结果的正确性
+    \end{itemize}
+\end{enumerate}
+
+\section{时间复杂度分析}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    \textbf{Sequence type} & \textbf{my heapsort time} & \textbf{std::sort\_heap time}  \\
+    \hline
+    Random Sequence & 0.0832616s & 0.0991568s  \\
+    \hline
+    Ordered Sequence & 0.0411709s & 0.0472082s  \\
+    \hline
+    Reversed Sequence & 0.0441177s & 0.0527089s \\
+    \hline
+    Partially Repeated Sequence & 0.0504211s & 0.0610703s  \\
+    \hline
+    \end{tabular}
+    \caption{my heapsort time and std::sort\_heap time}
+    \label{tab:performance_comparison}
+\end{table}
+
+\subsection{my heapsort的时间复杂度}
+
+一：对于每个节点,`heapify` 函数的时间复杂度是 $O(\log n)$。构建堆的时间复杂度为 $O(n)$,因为是从树的底部开始调整节点,调整次数与节点的层数成正比。
+
+二：每次从堆中提取堆顶元素后,堆的大小减少 1,`heapify` 操作的复杂度是 $O(\log n)$。因此,提取所有元素的时间复杂度为 $O(n \log n)$。
+
+因此,堆排序的总体时间复杂度是 $O(n \log n)$。
+
+
+`std::sort\_heap` 的时间复杂度也为 $O(n \log n)$。
+
+对比发现手写排序要比 STL 自带的 `std::sort\_heap` 快一些。但是据知乎问答,手写排序怎么可能比得上高贵的STL库函数呢?
+
+ 因为`std::sort\_heap` 在 STL 中进行了大量的优化,包括高效的内存访问模式、更少的临时对象创建和更紧凑的代码执行路径，我也没有优化自己的代码，肯定比不过
+
+对于1000000长度的序列,手写排序要快一些,但不多,
+
+我认为应该是因为数据长度太短,体现不出来stl的性能,因此增加至100000000长度,但不知道是耗时太长了还是电脑太垃圾了,终端在要要显示时间时停顿太久,我就换成10000000长度的序列,发现Random Sequence中stl的time是手写time的三分之一,而其他序列相差不大
+
+
+
+我用 valgrind 进行测试,发现没有发生内存泄露。
+
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
